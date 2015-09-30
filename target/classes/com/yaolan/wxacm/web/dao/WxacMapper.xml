@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yaolan.wxacm.web.dao.WxacMapper">
+    <resultMap id="BaseResultMap" type="com.yaolan.wxacm.web.model.Wxac">
+        <constructor>
+            <idArg column="AC_ID"    javaType="Long" />
+        </constructor>
+        <result column="AC_NAME" property="name" jdbcType="VARCHAR" />
+        <result column="AC_START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="AC_END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="AC_IMG_URL" property="imgUrl" jdbcType="VARCHAR" />
+        <result column="AC_TINY_IMG_URL" property="tinyImgUrl" jdbcType="VARCHAR" />
+        <result column="AC_INTRO" property="intro" jdbcType="LONGVARCHAR" />
+        <result column="AC_STATS" property="stats" jdbcType="INTEGER" />
+        <result column="AC_TYPE" property="type" jdbcType="INTEGER" />
+        <result column="AC_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        AC_ID,AC_NAME,AC_START_TIME,AC_END_TIME,AC_IMG_URL,AC_TINY_IMG_URL,AC_INTRO,AC_STATS,AC_TYPE,AC_CREATE_TIME
+    </sql>
+
+    <select id="getAllAc" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        wx_ac
+        order by AC_CREATE_TIME desc
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        wx_ac where ac_id=#{id,jdbcType=BIGINT}
+        order by AC_CREATE_TIME desc
+    </select>
+
+    <update id="updateStats">
+        update wx_ac set
+        AC_STATS=#{0}
+        where
+        ac_id=#{1}
+    </update>
+
+
+    <insert id="save_pz_ac">
+        insert into wx_ac_prize
+        (AC_ID,PZ_ID)
+        values
+        (#{0},#{1})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.yaolan.wxacm.web.model.Wxac">
+        insert into wx_ac
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="name != null">
+                AC_NAME,
+            </if>
+            <if test="startTime != null">
+                AC_START_TIME,
+            </if>
+            <if test="endTime != null">
+                AC_END_TIME,
+            </if>
+            <if test="imgUrl != null">
+                AC_IMG_URL,
+            </if>
+            <if test="tinyImgUrl != null">
+                AC_TINY_IMG_URL,
+            </if>
+            <if test="intro != null">
+                AC_INTRO,
+            </if>
+            <if test="stats != null">
+                AC_STATS,
+            </if>
+            <if test="type != null">
+                AC_TYPE,
+            </if>
+            <if test="createTime != null">
+                AC_CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="tinyImgUrl != null">
+                #{tinyImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="intro != null">
+                #{intro,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="stats != null">
+                #{stats,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+        <selectKey keyProperty="id" resultType="LONG" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.yaolan.wxacm.web.model.Wxac">
+        update wx_ac
+        set
+        <if test="name != null">
+            AC_NAME = #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="startTime != null">
+            AC_START_TIME = #{startTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="endTime != null">
+            AC_END_TIME = #{endTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="imgUrl != null">
+            AC_IMG_URL =#{imgUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="tinyImgUrl != null">
+            AC_TINY_IMG_URL =#{tinyImgUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="intro != null">
+            AC_INTRO =#{intro,jdbcType=LONGVARCHAR},
+        </if>
+        <if test="type != null">
+            AC_TYPE =#{type,jdbcType=INTEGER}
+        </if>
+
+
+
+        where ac_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from wx_ac
+    where ac_id = #{id,jdbcType=BIGINT}
+</delete>
+
+    <delete id="deleteByFKey" parameterType="java.lang.Long">
+        delete from wx_ac_prize
+        where ac_id = #{0} and pz_id= #{1}
+    </delete>
+</mapper>
