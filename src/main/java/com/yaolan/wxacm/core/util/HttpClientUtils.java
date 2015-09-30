@@ -123,7 +123,7 @@ public class HttpClientUtils {
 //    }
 
     public static void main(String[] args){
-        String url="http://photo.yaolan.com/insertPic.do";
+
         //File file2=new File("D:\\cache\\fileJellyfish.jpg");
         Map<String,Object> map=new LinkedHashMap<String,Object>();
         byte[] file2= null;
